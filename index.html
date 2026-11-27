@@ -987,6 +987,111 @@ td.nowrap{white-space:nowrap}
 @media (hover:hover) and (pointer:fine){@media (hover:hover) and (pointer:fine){.wxcard:hover{border-color:color-mix(in srgb,var(--brass2) 60%,var(--line));transform:translateY(-1px)}}@media (hover:hover) and (pointer:fine){.wxlk:hover{background:var(--bg2)}}}
 @media (max-width:520px){.wxgrid{--wxw:130px;gap:7px}.wxhtop{flex-direction:column}.thb.hero{width:100%}}
 .wlmode button{flex:1 0 auto;min-width:max-content}
+/* ===== v2.4 shell: taskbar, start menu, scrolling ===== */
+:root{--tkicon:44px}
+#tasks{overflow:hidden!important;align-items:center;min-width:0;gap:4px}
+:root[data-tkalign=center] #tasks{justify-content:center}
+.tkw{position:relative;flex:0 0 var(--tkw,160px);width:var(--tkw,160px);max-width:var(--tkmaxw,200px);display:flex;align-items:center;min-width:0;border-radius:8px}
+.tkw[hidden]{display:none!important}
+.tkw>.task{flex:1;width:100%;max-width:none!important;min-width:0;justify-content:flex-start}
+.tkw .tkl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+#tasks[data-mode=icon] .tkw,.tkw.pin{flex-basis:var(--tkicon);width:var(--tkicon)}
+#tasks[data-mode=icon] .tkw .tkl,.tkw.pin .tkl{display:none}
+#tasks[data-mode=icon] .tkw>.task,.tkw.pin>.task{justify-content:center;padding:0!important}
+.tkw.on>.task{box-shadow:inset 0 -2px 0 var(--brass2)}
+.tkw.pin>.task{opacity:.85;border-style:dashed;border-color:var(--line)}
+.tkw.pinned>.task::after{content:"";position:absolute;left:50%;bottom:3px;width:4px;height:4px;border-radius:50%;background:var(--brass2);transform:translateX(-50%)}
+.tkx{position:absolute;right:3px;top:50%;transform:translateY(-50%);width:22px;height:22px;display:grid;place-items:center;padding:0;border-radius:6px;border:0;background:color-mix(in srgb,var(--panel) 85%,transparent);color:var(--ink2);cursor:pointer;opacity:0;transition:opacity .12s,background .12s;z-index:1}
+.tkx svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
+.tkx:focus-visible{opacity:1;outline:2px solid var(--brass2)}
+.tkw:focus-within .tkx,.tkw.on .tkx{opacity:.85}
+@media (hover:hover) and (pointer:fine){@media (hover:hover) and (pointer:fine){.tkw:hover .tkx{opacity:1}}@media (hover:hover) and (pointer:fine){.tkx:hover{background:#b3383a;color:#fff}}}
+@media (pointer:coarse){.tkw.on .tkx{opacity:1}}
+:root[data-tkclose=always] .tkx{opacity:1}:root[data-tkclose=never] .tkw>.tkx{display:none}
+.tkw:not([data-mode]) .task{padding-right:28px}
+#tasks[data-mode=label] .tkw:not(.pin)>.task{padding-right:28px}
+#tasks[data-mode=icon] .tkx{top:2px;right:1px;transform:none;width:16px;height:16px;border-radius:50%}
+#tasks[data-mode=icon] .tkx svg{width:9px;height:9px}
+.tkmore{flex:none;height:calc(var(--bar,48px) - 12px);min-width:40px;padding:0 8px;border-radius:8px;border:1px solid var(--line2);background:var(--panel2);color:var(--brass2);font-weight:600;cursor:pointer}
+.tkmore[hidden]{display:none}
+.shpop{position:fixed;z-index:61000;max-height:min(70dvh,560px);overflow:auto;overscroll-behavior:contain;padding:8px;border-radius:12px;background:color-mix(in srgb,var(--panel) 97%,transparent);border:1px solid color-mix(in srgb,var(--brass) 50%,var(--line));box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px}
+.shpl,.sopenl{display:flex;flex-direction:column;gap:3px}
+.sopenl{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr))}
+.sow{position:relative;display:flex;min-width:0}.sow>.sapp{flex:1;min-width:0;padding-right:32px!important}.sow>.sapp b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sow .tkx{opacity:.8}.sow.on>.sapp{border-color:var(--brass2)}
+.shclk .shbig{font:600 28px var(--mono);color:var(--brass2)}
+/* bar position / size / auto-hide */
+:root[data-barsize=s]{--bar:38px;--tkicon:36px}:root[data-barsize=m]{--bar:48px;--tkicon:44px}:root[data-barsize=l]{--bar:60px;--tkicon:54px}:root[data-barsize=xl]{--bar:74px;--tkicon:66px}
+:root[data-barsize] #bar .task,:root[data-barsize] #startbtn,:root[data-barsize] #spotbtn,:root[data-barsize] #savest{height:calc(var(--bar) - 12px)}
+:root[data-barsize=l] .task svg,:root[data-barsize=l] #spotbtn svg{width:20px;height:20px}:root[data-barsize=xl] .task svg,:root[data-barsize=xl] #spotbtn svg{width:24px;height:24px}
+:root[data-barsize=l] #bar,:root[data-barsize=xl] #bar{font-size:15px}
+:root[data-barsize=s] .task{font-size:12px}
+:root[data-barpos=top] #bar{top:0;bottom:auto;height:calc(var(--bar) + env(safe-area-inset-top,0px));padding-top:env(safe-area-inset-top,0px);padding-bottom:0;border-top:0;border-bottom:1px solid color-mix(in srgb,var(--brass) 55%,transparent)}
+:root[data-barpos=top] #desk{top:calc(var(--bar) + env(safe-area-inset-top,0px));bottom:0!important}
+:root[data-barpos=top] #start{top:calc(var(--bar) + 8px);bottom:auto!important}
+:root[data-barpos=top] #toasts{bottom:16px}
+:root[data-barhide=on] #desk{bottom:0!important}:root[data-barhide=on][data-barpos=top] #desk{top:0!important}
+:root[data-barhide=on] #bar{transform:translateY(calc(100% - 4px));transition:transform .2s}
+:root[data-barhide=on][data-barpos=top] #bar{transform:translateY(calc(-100% + 4px))}
+:root[data-barhide=on][data-barshow=on] #bar,:root[data-barhide=on] #bar:focus-within{transform:none}
+/* tray options */
+:root[data-barsearch=off] #spotbtn{display:none}
+:root[data-barsearch=icon] #spotbtn{min-width:0;width:calc(var(--bar,48px) - 8px);padding:0;justify-content:center}:root[data-barsearch=icon] #spotbtn span,:root[data-barsearch=icon] #spotbtn kbd{display:none}
+:root[data-barsearch=full] #spotbtn span{display:inline!important}
+:root[data-barlang=off] #langsel{display:none}:root[data-barsave=off] #savest{display:none}
+#clockx{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:1px;height:calc(var(--bar,48px) - 10px);padding:0 6px;border:1px solid transparent;border-radius:8px;background:none;color:var(--ink2);font:12px/1.15 var(--mono);white-space:nowrap;cursor:pointer}
+#clockx b{font-weight:600;color:var(--ink)}#clockx .muted{font-size:.85em}#clockx[hidden]{display:none}
+#clockx:focus-visible{border-color:var(--brass2)}
+@media (max-width:620px){#clockx .muted{display:none}}
+@media (max-height:300px),(max-width:340px){#clockx{display:none}}
+/* start menu: sizes, layouts, columns */
+#start{--sapw:200px;--sgw:300px}
+#start[data-size=auto]{width:min(calc(100vw - 16px),clamp(340px,40vw + 160px,1180px))}
+#start[data-size=s]{width:min(calc(100vw - 16px),420px)}#start[data-size=m]{width:min(calc(100vw - 16px),680px)}#start[data-size=l]{width:min(calc(100vw - 16px),960px)}
+#start[data-size=full]{left:8px!important;right:8px!important;width:auto!important;top:8px;max-height:none!important;bottom:calc(var(--bar,48px) + 8px)}
+:root[data-barpos=top] #start[data-size=full]{top:calc(var(--bar) + 8px);bottom:8px!important}
+#start[data-size=s]{--sapw:160px;--sgw:9999px}#start[data-size=m]{--sapw:190px;--sgw:300px}#start[data-size=l],#start[data-size=full]{--sapw:210px;--sgw:320px}
+#start .sgroups{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,var(--sgw)),1fr));gap:0 18px;align-items:start}
+#start[data-gcols="1"] .sgroups{grid-template-columns:1fr}#start[data-gcols="2"] .sgroups{grid-template-columns:repeat(2,minmax(0,1fr))}#start[data-gcols="3"] .sgroups{grid-template-columns:repeat(3,minmax(0,1fr))}
+#start .sgrid{grid-template-columns:repeat(auto-fill,minmax(min(100%,var(--sapw)),1fr))}
+#start.fixcols .sgrid{grid-template-columns:repeat(var(--scols),minmax(0,1fr))}
+#start[data-layout=list] .sgrid{grid-template-columns:1fr!important}
+#start[data-layout=grid] .sgrid{grid-template-columns:repeat(auto-fill,minmax(min(100%,128px),1fr))}
+#start[data-layout=grid] .sapp:not(.mini){flex-direction:column;text-align:center;justify-content:flex-start;padding:10px 6px}#start[data-layout=grid] .sapp:not(.mini) small{display:none}
+#start[data-layout=compact] .sgrid{grid-template-columns:repeat(auto-fill,minmax(min(100%,96px),1fr))}#start[data-layout=compact] .sapp:not(.mini){flex-direction:column;gap:4px;padding:6px 4px;text-align:center}#start[data-layout=compact] .sapp small{display:none}#start[data-layout=compact] .sapp b{font-size:11.5px}
+#start[data-desc=off] .sapp small{display:none!important}#start[data-desc=on] .sapp:not(.mini) small{display:block!important}
+#start[data-icon=s] .sapp .ic{width:26px;height:26px}#start[data-icon=s] .sapp .ic svg{width:14px;height:14px}
+#start[data-icon=l] .sapp .ic{width:44px;height:44px}#start[data-icon=l] .sapp .ic svg{width:24px;height:24px}
+.sapp b{overflow:hidden;text-overflow:ellipsis;display:block}.sapp>span:last-child{min-width:0}
+.sappw{position:relative;display:block;min-width:0}.sappw>.sapp{width:100%}
+.sfav{position:absolute;top:3px;right:3px;width:24px;height:24px;padding:0;border:0;border-radius:6px;background:none;color:var(--brass2);font-size:14px;line-height:1;cursor:pointer;opacity:0;transition:opacity .12s}
+.sfav.on{opacity:.9}.sappw:focus-within .sfav{opacity:1}
+@media (hover:hover) and (pointer:fine){@media (hover:hover) and (pointer:fine){.sappw:hover .sfav{opacity:1}}@media (hover:hover) and (pointer:fine){.sfav:hover{background:var(--bg2)}}}
+@media (pointer:coarse){.sfav{opacity:.55}}
+.shead .shtools{display:flex;gap:4px;margin-left:auto;flex:none}
+.shgh{display:flex;align-items:center;gap:8px;width:100%;padding:0;border:0;background:none;color:inherit;font:inherit;cursor:pointer;text-align:left}.shgh>span:first-child{flex:1}
+.shgh .chev{transition:transform .15s}.sgrp.collapsed .shgh .chev{transform:rotate(-90deg)}.sgrp.collapsed>.sgrid{display:none}
+.sgrp h5{display:flex;align-items:center;gap:8px}.sgrp h5>span:first-child{flex:1}
+.lnk{border:0;background:none;color:var(--brass2);font:inherit;font-size:11px;cursor:pointer;text-decoration:underline;padding:0 2px}
+@media (max-height:460px){#start[data-size=auto],#start[data-size=m],#start[data-size=l]{left:4px!important;right:4px!important;width:auto!important;top:4px;bottom:calc(var(--bar,48px) + 4px);max-height:none!important}}
+@media (max-width:420px){#start{left:4px!important;right:4px!important;width:auto!important}}
+/* scrolling: bars, fades, smoothness, containment */
+:root{--sbw:10px}:root[data-sb=thin]{--sbw:6px}:root[data-sb=wide]{--sbw:15px}
+@media (min-width:2400px) and (min-height:1200px){:root{--sbw:14px}:root[data-sb=thin]{--sbw:8px}:root[data-sb=wide]{--sbw:20px}}
+@media (max-height:300px){:root{--sbw:6px}}
+::-webkit-scrollbar{width:var(--sbw);height:var(--sbw)}
+:root[data-sb=thin] *{scrollbar-width:thin}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+#ctx,.pvpop,.shpop,#start,.spbox,.qls,.qlv,.wld,.wxlinks{overscroll-behavior:contain}
+#ctx{max-height:calc(100dvh - 12px)!important}
+:root[data-fades=on] .hs-r:not(.hs-l){-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent)}
+:root[data-fades=on] .hs-l:not(.hs-r){-webkit-mask-image:linear-gradient(90deg,transparent,#000 28px);mask-image:linear-gradient(90deg,transparent,#000 28px)}
+:root[data-fades=on] .hs-l.hs-r{-webkit-mask-image:linear-gradient(90deg,transparent,#000 28px,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,transparent,#000 28px,#000 calc(100% - 28px),transparent)}
+.hs-drag{cursor:grabbing!important;user-select:none}.hs-drag *{pointer-events:none}
+.shtop{position:absolute;right:14px;bottom:14px;width:38px;height:38px;border-radius:50%;border:1px solid var(--line2);background:var(--panel2);color:var(--brass2);font-size:18px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:opacity .15s;z-index:5;cursor:pointer}
+.shtop.on{opacity:.92;pointer-events:auto}
+@media (max-height:300px){.shtop{width:26px;height:26px;font-size:13px;right:6px;bottom:6px}}
+.shpop .sapp .ic{width:28px;height:28px}.shpop .sapp .ic svg{width:15px;height:15px}.shpop .sapp{display:flex;align-items:center;gap:8px;width:100%}
 
 /* ══════════ themes.css ══════════ */
 /* ===== generated by tools/themes.py — theme wallpapers, icon frames, title bars, canvas palettes ===== */
@@ -1022,8 +1127,8 @@ td.nowrap{white-space:nowrap}
 </style>
 </head>
 <body>
-<noscript><p style="padding:24px;font:16px sans-serif">Omega needs JavaScript enabled. · O Omega precisa do JavaScript ativado.</p></noscript>
-<main id="desk" aria-label="Omega"><div id="brand"></div></main>
+<noscript><p style="padding:24px;font:16px sans-serif">Omega OS needs JavaScript enabled. · O Omega OS precisa do JavaScript ativado.</p></noscript>
+<main id="desk" aria-label="Omega OS"><div id="brand"></div></main>
 <nav id="bar" aria-label="Taskbar">
   <button id="startbtn" aria-haspopup="true"><span id="startlbl" class="sr"></span></button>
   <button id="spotbtn" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><span id="spotlbl"></span><kbd id="spotkbd">Ctrl K</kbd></button>
@@ -1047,7 +1152,7 @@ const SELF_HTML=(()=>{try{return '<!DOCTYPE html>\n'+document.documentElement.ou
 /* ================= CORE ================= */
 const LANGS=['en','pt','fr','it','pl','de','es'];
 const LANG_NAMES={en:'English',pt:'Português',fr:'Français',it:'Italiano',pl:'Polski',de:'Deutsch',es:'Español'};
-const APP_VERSION='2.3.0';
+const APP_VERSION='2.4.0';
 const BUILD_DATE='2026-11-24';
 const S={
   settings:{cc:'55',lang:(()=>{const l=(navigator.language||'en').slice(0,2).toLowerCase();return LANGS.includes(l)?l:'en'})(),ui:'dark',tz:'local',investigator:'',org:'',caseNo:'',caseTitle:'',ctxMin:10},
@@ -4487,6 +4592,98 @@ Object.assign(I18N,{
 "wx.m.ext":["Domain checks (external, you choose)", "Verificações do domínio (externas, você escolhe)", "Vérifications du domaine (externes, à votre choix)", "Verifiche del dominio (esterne, a scelta)", "Sprawdzenie domeny (zewnętrzne, z wyboru)", "Domainprüfungen (extern, nach Wahl)", "Comprobaciones del dominio (externas, a elección)"],
 "wx.m.exth":["These open another website in your browser only after you confirm.", "Abrem outro site no seu navegador só depois da sua confirmação.", "Ouvrent un autre site uniquement après confirmation.", "Aprono un altro sito solo dopo conferma.", "Otwierają inną stronę dopiero po potwierdzeniu.", "Öffnen eine andere Website erst nach Bestätigung.", "Abren otro sitio solo después de confirmar."],
 "wx.m.log":["e-mail address examined", "endereço de e-mail examinado", "adresse e-mail examinée", "indirizzo e-mail esaminato", "zbadano adres e-mail", "E-Mail-Adresse geprüft", "dirección de correo examinada"]
+});
+
+/* ══════════ module: i18n19 ══════════ */
+/* ================= I18N — v20: taskbar, start menu, scrolling ================= */
+Object.assign(I18N,{
+"sh.tab":["Taskbar & menu", "Barra e menu", "Barre et menu", "Barra e menu", "Pasek i menu", "Leiste & Menü", "Barra y menú"],
+"sh.pinned":["pinned", "fixado", "épinglé", "fissato", "przypięte", "angeheftet", "fijado"],
+"sh.minimized":["minimized", "minimizada", "réduite", "ridotta", "zminimalizowane", "minimiert", "minimizada"],
+"sh.all":["All open tools", "Todas as ferramentas abertas", "Tous les outils ouverts", "Tutti gli strumenti aperti", "Wszystkie otwarte narzędzia", "Alle offenen Werkzeuge", "Todas las herramientas abiertas"],
+"sh.more":["{n} more open tools", "Mais {n} ferramentas abertas", "{n} autres outils ouverts", "Altri {n} strumenti aperti", "Jeszcze {n} otwartych narzędzi", "{n} weitere offene Werkzeuge", "{n} herramientas abiertas más"],
+"sh.closeallq":["Close all {n} open tools?", "Fechar as {n} ferramentas abertas?", "Fermer les {n} outils ouverts ?", "Chiudere tutti i {n} strumenti aperti?", "Zamknąć wszystkie {n} otwarte narzędzia?", "Alle {n} offenen Werkzeuge schließen?", "¿Cerrar las {n} herramientas abiertas?"],
+"sh.open":["Open now", "Abertas agora", "Ouverts", "Aperti ora", "Otwarte teraz", "Jetzt geöffnet", "Abiertas ahora"],
+"sh.closeall":["Close all", "Fechar todas", "Tout fermer", "Chiudi tutti", "Zamknij wszystkie", "Alle schließen", "Cerrar todas"],
+"sh.pinnedok":["{a} pinned to the taskbar", "{a} fixada na barra", "{a} épinglé à la barre", "{a} fissato alla barra", "{a} przypięto do paska", "{a} an die Leiste angeheftet", "{a} fijada en la barra"],
+"sh.unpinnedok":["{a} unpinned", "{a} desafixada", "{a} désépinglé", "{a} sbloccato", "{a} odpięto", "{a} gelöst", "{a} desfijada"],
+"sh.pin":["Pin to taskbar", "Fixar na barra", "Épingler à la barre", "Fissa alla barra", "Przypnij do paska", "An Leiste anheften", "Fijar en la barra"],
+"sh.unpin":["Unpin from taskbar", "Desafixar da barra", "Désépingler", "Rimuovi dalla barra", "Odepnij od paska", "Von Leiste lösen", "Quitar de la barra"],
+"sh.openit":["Open", "Abrir", "Ouvrir", "Apri", "Otwórz", "Öffnen", "Abrir"],
+"sh.tz":["Time zone", "Fuso horário", "Fuseau horaire", "Fuso orario", "Strefa czasowa", "Zeitzone", "Zona horaria"],
+"sh.expand":["Expand menu", "Expandir menu", "Agrandir le menu", "Espandi menu", "Rozwiń menu", "Menü vergrößern", "Expandir menú"],
+"sh.shrink":["Back to normal size", "Voltar ao tamanho normal", "Taille normale", "Dimensione normale", "Normalny rozmiar", "Normale Größe", "Tamaño normal"],
+"sh.favs":["Favourites", "Favoritos", "Favoris", "Preferiti", "Ulubione", "Favoriten", "Favoritos"],
+"sh.az":["All tools A–Z", "Todas as ferramentas A–Z", "Tous les outils A–Z", "Tutti gli strumenti A–Z", "Wszystkie narzędzia A–Z", "Alle Werkzeuge A–Z", "Todas las herramientas A–Z"],
+"sh.fav":["Add to favourites", "Adicionar aos favoritos", "Ajouter aux favoris", "Aggiungi ai preferiti", "Dodaj do ulubionych", "Zu Favoriten", "Añadir a favoritos"],
+"sh.unfav":["Remove from favourites", "Remover dos favoritos", "Retirer des favoris", "Rimuovi dai preferiti", "Usuń z ulubionych", "Aus Favoriten entfernen", "Quitar de favoritos"],
+"sh.top":["Back to top", "Voltar ao topo", "Retour en haut", "Torna su", "Do góry", "Nach oben", "Volver arriba"],
+"sh.s.bar":["Taskbar", "Barra de tarefas", "Barre des tâches", "Barra delle applicazioni", "Pasek zadań", "Taskleiste", "Barra de tareas"],
+"sh.s.pos":["Position", "Posição", "Position", "Posizione", "Położenie", "Position", "Posición"],
+"sh.o.bottom":["Bottom", "Embaixo", "En bas", "In basso", "Na dole", "Unten", "Abajo"],
+"sh.o.top":["Top", "Em cima", "En haut", "In alto", "Na górze", "Oben", "Arriba"],
+"sh.s.size":["Height", "Altura", "Hauteur", "Altezza", "Wysokość", "Höhe", "Altura"],
+"sh.o.auto":["Automatic (fits the screen)", "Automático (ajusta à tela)", "Automatique (selon l’écran)", "Automatico (secondo lo schermo)", "Automatycznie (do ekranu)", "Automatisch (passend zum Bildschirm)", "Automático (según la pantalla)"],
+"sh.o.xl":["Extra large", "Extra grande", "Très grand", "Molto grande", "Bardzo duży", "Sehr groß", "Muy grande"],
+"sh.s.labels":["Names on tool buttons", "Nomes nos botões das ferramentas", "Noms sur les boutons", "Nomi sui pulsanti", "Nazwy na przyciskach", "Namen auf den Schaltflächen", "Nombres en los botones"],
+"sh.o.autofit":["When they fit", "Quando couberem", "Quand ils tiennent", "Quando c’è spazio", "Gdy się mieszczą", "Wenn Platz ist", "Cuando quepan"],
+"sh.o.always":["Always", "Sempre", "Toujours", "Sempre", "Zawsze", "Immer", "Siempre"],
+"sh.o.icons":["Icons only", "Só ícones", "Icônes seules", "Solo icone", "Tylko ikony", "Nur Symbole", "Solo iconos"],
+"sh.s.maxw":["Maximum button width", "Largura máxima dos botões", "Largeur maximale des boutons", "Larghezza massima pulsanti", "Maks. szerokość przycisku", "Maximale Schaltflächenbreite", "Ancho máximo de botones"],
+"sh.s.close":["Close (×) on tool buttons", "Fechar (×) nos botões das ferramentas", "Fermer (×) sur les boutons", "Chiudi (×) sui pulsanti", "Zamknij (×) na przyciskach", "Schließen (×) auf Schaltflächen", "Cerrar (×) en los botones"],
+"sh.o.hover":["On hover / active", "Ao passar o mouse / ativa", "Au survol / actif", "Al passaggio / attivo", "Po najechaniu / aktywne", "Beim Überfahren / aktiv", "Al pasar / activa"],
+"sh.s.align":["Tool buttons alignment", "Alinhamento dos botões", "Alignement des boutons", "Allineamento pulsanti", "Wyrównanie przycisków", "Ausrichtung der Schaltflächen", "Alineación de botones"],
+"sh.o.left":["Left", "Esquerda", "Gauche", "Sinistra", "Do lewej", "Links", "Izquierda"],
+"sh.o.center":["Centre", "Centro", "Centre", "Centro", "Środek", "Mitte", "Centro"],
+"sh.s.order":["Order", "Ordem", "Ordre", "Ordine", "Kolejność", "Reihenfolge", "Orden"],
+"sh.o.opened":["As opened", "Como foram abertas", "Ordre d’ouverture", "Come aperti", "Wg otwarcia", "Wie geöffnet", "Según apertura"],
+"sh.s.search":["Search button", "Botão de busca", "Bouton de recherche", "Pulsante di ricerca", "Przycisk wyszukiwania", "Suchschaltfläche", "Botón de búsqueda"],
+"sh.o.full":["Icon and text", "Ícone e texto", "Icône et texte", "Icona e testo", "Ikona i tekst", "Symbol und Text", "Icono y texto"],
+"sh.o.icon":["Icon only", "Só ícone", "Icône seule", "Solo icona", "Tylko ikona", "Nur Symbol", "Solo icono"],
+"sh.o.hide":["Hidden", "Oculto", "Masqué", "Nascosto", "Ukryte", "Ausgeblendet", "Oculto"],
+"sh.s.clock":["Clock", "Relógio", "Horloge", "Orologio", "Zegar", "Uhr", "Reloj"],
+"sh.o.clockfull":["Time + UTC date and time", "Hora + data e hora UTC", "Heure + date et heure UTC", "Ora + data e ora UTC", "Godzina + data i czas UTC", "Uhrzeit + UTC-Datum/Zeit", "Hora + fecha y hora UTC"],
+"sh.o.clockdate":["Time + date", "Hora + data", "Heure + date", "Ora + data", "Godzina + data", "Uhrzeit + Datum", "Hora + fecha"],
+"sh.o.clocktime":["Time only", "Só hora", "Heure seule", "Solo ora", "Tylko godzina", "Nur Uhrzeit", "Solo hora"],
+"sh.o.clocksec":["Time with seconds", "Hora com segundos", "Heure avec secondes", "Ora con secondi", "Godzina z sekundami", "Uhrzeit mit Sekunden", "Hora con segundos"],
+"sh.s.lang":["Language selector on the bar", "Seletor de idioma na barra", "Sélecteur de langue", "Selettore lingua", "Wybór języka na pasku", "Sprachauswahl in der Leiste", "Selector de idioma"],
+"sh.s.save":["Save status on the bar", "Status de salvamento na barra", "État d’enregistrement", "Stato di salvataggio", "Stan zapisu na pasku", "Speicherstatus in der Leiste", "Estado de guardado"],
+"sh.s.autohide":["Hide the taskbar automatically", "Ocultar a barra automaticamente", "Masquer la barre automatiquement", "Nascondi la barra automaticamente", "Automatycznie ukrywaj pasek", "Leiste automatisch ausblenden", "Ocultar la barra automáticamente"],
+"sh.s.autohideh":["It comes back when the pointer reaches the screen edge or when you tap the edge.", "Ela volta quando o ponteiro chega à borda da tela ou quando você toca na borda.", "Elle revient quand le pointeur atteint le bord ou d’un toucher sur le bord.", "Ritorna quando il puntatore raggiunge il bordo o toccando il bordo.", "Wraca, gdy wskaźnik dotknie krawędzi lub po dotknięciu krawędzi.", "Erscheint, wenn der Zeiger den Rand erreicht oder der Rand angetippt wird.", "Vuelve cuando el puntero llega al borde o al tocar el borde."],
+"sh.s.mid":["Middle click closes a tool", "Clique do botão do meio fecha a ferramenta", "Clic du milieu ferme l’outil", "Clic centrale chiude lo strumento", "Środkowy przycisk zamyka narzędzie", "Mittelklick schließt ein Werkzeug", "Clic central cierra la herramienta"],
+"sh.s.confirm":["Confirm before closing all", "Confirmar antes de fechar todas", "Confirmer avant de tout fermer", "Conferma prima di chiudere tutto", "Potwierdź przed zamknięciem wszystkich", "Vor „Alle schließen“ bestätigen", "Confirmar antes de cerrar todas"],
+"sh.s.pins":["Pinned tools", "Ferramentas fixadas", "Outils épinglés", "Strumenti fissati", "Przypięte narzędzia", "Angeheftete Werkzeuge", "Herramientas fijadas"],
+"sh.s.pinsh":["Pinned tools stay on the bar even when closed. You can also right-click a tool button.", "Ferramentas fixadas ficam na barra mesmo fechadas. Também dá para clicar com o botão direito no botão da ferramenta.", "Les outils épinglés restent sur la barre même fermés. Clic droit sur un bouton aussi.", "Gli strumenti fissati restano sulla barra anche chiusi. Anche con il clic destro.", "Przypięte narzędzia zostają na pasku po zamknięciu. Można też kliknąć prawym przyciskiem.", "Angeheftete Werkzeuge bleiben in der Leiste. Auch per Rechtsklick.", "Las herramientas fijadas siguen en la barra aunque estén cerradas. También con clic derecho."],
+"sh.s.menu":["Start menu", "Menu iniciar", "Menu démarrer", "Menu start", "Menu start", "Startmenü", "Menú inicio"],
+"sh.s.msize":["Menu size", "Tamanho do menu", "Taille du menu", "Dimensione menu", "Rozmiar menu", "Menügröße", "Tamaño del menú"],
+"sh.o.fulls":["Full screen", "Tela cheia", "Plein écran", "Schermo intero", "Pełny ekran", "Vollbild", "Pantalla completa"],
+"sh.s.layout":["Layout", "Disposição", "Disposition", "Disposizione", "Układ", "Anordnung", "Disposición"],
+"sh.o.list":["List with descriptions", "Lista com descrições", "Liste avec descriptions", "Elenco con descrizioni", "Lista z opisami", "Liste mit Beschreibungen", "Lista con descripciones"],
+"sh.o.grid":["Large icons", "Ícones grandes", "Grandes icônes", "Icone grandi", "Duże ikony", "Große Symbole", "Iconos grandes"],
+"sh.o.compact":["Compact", "Compacto", "Compact", "Compatto", "Kompaktowy", "Kompakt", "Compacto"],
+"sh.s.cols":["Columns of tools", "Colunas de ferramentas", "Colonnes d’outils", "Colonne di strumenti", "Kolumny narzędzi", "Werkzeugspalten", "Columnas de herramientas"],
+"sh.s.gcols":["Columns of groups", "Colunas de grupos", "Colonnes de groupes", "Colonne di gruppi", "Kolumny grup", "Gruppenspalten", "Columnas de grupos"],
+"sh.s.desc":["Descriptions", "Descrições", "Descriptions", "Descrizioni", "Opisy", "Beschreibungen", "Descripciones"],
+"sh.s.icon":["Icon size", "Tamanho dos ícones", "Taille des icônes", "Dimensione icone", "Rozmiar ikon", "Symbolgröße", "Tamaño de iconos"],
+"sh.s.sort":["Organise by", "Organizar por", "Organiser par", "Organizza per", "Porządkuj wg", "Ordnen nach", "Organizar por"],
+"sh.o.groups":["Groups", "Grupos", "Groupes", "Gruppi", "Grupy", "Gruppen", "Grupos"],
+"sh.s.mopen":["Show open tools (with close buttons)", "Mostrar ferramentas abertas (com botão fechar)", "Afficher les outils ouverts (avec fermeture)", "Mostra strumenti aperti (con chiusura)", "Pokaż otwarte narzędzia (z zamykaniem)", "Offene Werkzeuge zeigen (mit Schließen)", "Mostrar herramientas abiertas (con cerrar)"],
+"sh.s.massist":["Show assistant suggestions", "Mostrar sugestões do assistente", "Afficher les suggestions", "Mostra suggerimenti", "Pokaż podpowiedzi asystenta", "Assistent-Vorschläge zeigen", "Mostrar sugerencias"],
+"sh.s.mfreq":["Show frequently used", "Mostrar mais usadas", "Afficher les plus utilisés", "Mostra i più usati", "Pokaż często używane", "Häufig genutzte zeigen", "Mostrar más usadas"],
+"sh.s.clrfav":["Clear favourites", "Limpar favoritos", "Effacer les favoris", "Svuota preferiti", "Wyczyść ulubione", "Favoriten leeren", "Borrar favoritos"],
+"sh.s.expandall":["Expand all groups", "Expandir todos os grupos", "Déplier tous les groupes", "Espandi tutti i gruppi", "Rozwiń wszystkie grupy", "Alle Gruppen aufklappen", "Expandir todos los grupos"],
+"sh.s.scroll":["Scrolling", "Rolagem", "Défilement", "Scorrimento", "Przewijanie", "Scrollen", "Desplazamiento"],
+"sh.s.bars":["Scroll bars", "Barras de rolagem", "Barres de défilement", "Barre di scorrimento", "Paski przewijania", "Bildlaufleisten", "Barras de desplazamiento"],
+"sh.o.thin":["Thin", "Finas", "Fines", "Sottili", "Cienkie", "Schmal", "Finas"],
+"sh.o.wide":["Wide (easier to grab)", "Largas (mais fáceis de pegar)", "Larges (plus faciles à saisir)", "Larghe (più facili)", "Szerokie (łatwiej chwycić)", "Breit (leichter zu greifen)", "Anchas (más fáciles)"],
+"sh.s.smooth":["Smooth scrolling", "Rolagem suave", "Défilement fluide", "Scorrimento fluido", "Płynne przewijanie", "Sanftes Scrollen", "Desplazamiento suave"],
+"sh.s.hwheel":["Mouse wheel scrolls rows sideways", "Roda do mouse rola as faixas para os lados", "La molette fait défiler les rangées latéralement", "La rotella scorre le righe di lato", "Kółko przewija rzędy w bok", "Mausrad scrollt Zeilen seitwärts", "La rueda desplaza las filas de lado"],
+"sh.s.hwheelh":["Tabs, filters and image strips that don’t fit scroll with the normal wheel.", "Abas, filtros e faixas de imagens que não cabem rolam com a roda normal.", "Onglets, filtres et bandes d’images défilent avec la molette.", "Schede, filtri e strisce di immagini scorrono con la rotella.", "Karty, filtry i paski obrazów przewijają się kółkiem.", "Tabs, Filter und Bildleisten scrollen mit dem Rad.", "Pestañas, filtros y tiras de imágenes se desplazan con la rueda."],
+"sh.s.drag":["Drag rows with the mouse to scroll them", "Arrastar faixas com o mouse para rolar", "Faire glisser les rangées à la souris", "Trascina le righe con il mouse", "Przeciągaj rzędy myszą", "Zeilen mit der Maus ziehen", "Arrastrar filas con el ratón"],
+"sh.s.fades":["Fade edges show there is more to scroll", "Bordas esmaecidas indicam que há mais para rolar", "Bords estompés : il reste du contenu", "Bordi sfumati indicano altro contenuto", "Wyblakłe krawędzie oznaczają więcej treści", "Verblasste Ränder zeigen mehr Inhalt", "Bordes difuminados indican más contenido"],
+"sh.s.top":["“Back to top” button in long windows", "Botão “voltar ao topo” em janelas longas", "Bouton « retour en haut » dans les longues fenêtres", "Pulsante «torna su» nelle finestre lunghe", "Przycisk „do góry” w długich oknach", "„Nach oben“-Knopf in langen Fenstern", "Botón «volver arriba» en ventanas largas"],
+"sh.s.try":["Open the menu to preview", "Abrir o menu para ver", "Ouvrir le menu pour voir", "Apri il menu per vedere", "Otwórz menu, aby zobaczyć", "Menü zur Vorschau öffnen", "Abrir el menú para ver"],
+"sh.s.reset":["Restore taskbar, menu and scrolling defaults", "Restaurar padrões da barra, menu e rolagem", "Rétablir barre, menu et défilement", "Ripristina barra, menu e scorrimento", "Przywróć domyślne paska, menu i przewijania", "Leiste, Menü und Scrollen zurücksetzen", "Restaurar barra, menú y desplazamiento"]
 });
 
 /* ══════════ module: parsers ══════════ */
@@ -10271,7 +10468,7 @@ const SET_INDEX={look:['set.theme','st3.lit','st3.cross','st3.typo','st2.density
   q.oninput=debounce(run,200);if(w.sq)run();
   if(w.tab==='data'){const box=document.createElement('div');box.className='card dangerzone';box.innerHTML=`<h4 class="h">${esc(t('sy.danger'))}</h4><p class="small muted">${esc(t('sy.dangerd'))}</p><div class="row"><button class="btn" id="sydf">${icon('trash')} ${esc(t('sy.delfilest'))}</button><button class="btn" id="sydall">${icon('trash')} ${esc(t('sy.delallt'))}</button><button class="btn pri" id="syrst">${icon('power')} ${esc(t('sy.resett'))}</button></div>`;
     c.appendChild(box);$('#sydf',box).onclick=deleteCaseFiles;$('#sydall',box).onclick=deleteAllData;$('#syrst',box).onclick=systemReset}},
- APPS.settings.langs=function(c,w){c.innerHTML=`<div class="tabs">${['look','access','charts','case','analysis','langs','auto','prev','data'].map(k=>`<button data-st="${k}" class="${k==='langs'?'on':''}">${esc(k==='langs'?t('sy.langs'):k==='auto'?t('au.tab'):k==='prev'?t('pv.tab'):t('st2.'+k))}</button>`).join('')}</div>
+ APPS.settings.langs=function(c,w){c.innerHTML=`<div class="tabs">${['look','shell','access','charts','case','analysis','langs','auto','prev','data'].map(k=>`<button data-st="${k}" class="${k==='langs'?'on':''}">${esc(k==='langs'?t('sy.langs'):k==='auto'?t('au.tab'):k==='prev'?t('pv.tab'):k==='shell'?t('sh.tab'):t('st2.'+k))}</button>`).join('')}</div>
    <p class="small muted" style="margin-top:0">${esc(t('sy.langsd'))}</p><div id="lgt"><p class="small muted">${esc(t('lz.working'))}</p></div><div class="row" style="margin-top:10px"><button class="btn pri" id="lgprep">⤓ ${esc(t('sy.prep'))}</button><span class="small muted" id="lgst"></span></div>`;
   $$('[data-st]',c).forEach(b=>b.onclick=()=>{w.tab=b.dataset.st;renderWin('settings')});
   const st=v=>({available:'✓ '+t('sy.ok'),downloadable:'⤓ '+t('sy.dl'),downloading:'… '+t('sy.dling'),same:'—',cloud:'☁ '+t('sy.cloud'),unavailable:'✗ '+t('sy.na'),none:'✗ '+t('sy.na')})[v]||v;
@@ -10282,6 +10479,137 @@ const SET_INDEX={look:['set.theme','st3.lit','st3.cross','st3.typo','st2.density
   $('#lgprep',c).onclick=async()=>{if(navigator.onLine===false){toast(t('sy.needonline'));return}const b=$('#lgprep',c);b.disabled=true;const s=$('#lgst',c);await prepareOffline(l=>{if(s)s.textContent=LANG_NAMES[l]+' ✓'});b.disabled=false;toast(t('sy.prepdone'));draw()}}}
 /* --- the restart button in the menu --- */
 {const _rs=renderStart;renderStart=function(q){_rs(q);const f=$('#start .sfoot');if(f&&!$('#sysrst',f))f.insertAdjacentHTML('beforeend',`<button class="btn sm sysbtn" id="sysrst" title="${esc(t('sy.resett'))}" aria-label="${esc(t('sy.resett'))}">${icon('power')}</button>`);const b=$('#sysrst');if(b)b.onclick=()=>{closeStart();systemReset()}}}
+
+/* ══════════ module: shell ══════════ */
+/* ================= SHELL — v2.4: smart taskbar (auto-sizing buttons, close buttons, pins, overflow list,
+   position/size/auto-hide), expansive start menu (sizes, layouts, columns, favourites, open tools with close,
+   collapsible groups, keyboard navigation) and scrolling helpers for every menu, row and window (144p → 4K). ================= */
+const SH_BAR_DEF={pos:'bottom',size:'auto',labels:'auto',close:'hover',maxw:200,align:'left',pins:[],search:'auto',clock:'full',lang:true,save:true,autohide:false,midclose:true,confirmAll:true,order:'open'};
+const SH_MENU_DEF={layout:'auto',size:'auto',cols:0,desc:'auto',open:true,assist:true,freq:true,favs:[],collapsed:[],sort:'group',icon:'m',groupcols:'auto'};
+const SH_SCR_DEF={bars:'normal',smooth:true,hwheel:true,drag:true,fades:true,top:true};
+function shBar(){return Object.assign({},SH_BAR_DEF,S.settings.bar||{})}
+function shMenu(){return Object.assign({},SH_MENU_DEF,S.settings.smenu||{})}
+function shScr(){return Object.assign({},SH_SCR_DEF,S.settings.scroll||{})}
+function shSave(k,o){S.settings[k]=Object.assign({},S.settings[k]||{},o);saveSettings();shApply()}
+function shApply(){const d=document.documentElement,B=shBar(),R=shScr();d.dataset.barpos=B.pos;d.dataset.barsize=B.size;d.dataset.tkclose=B.close;d.dataset.tkalign=B.align;d.dataset.barsearch=B.search;d.dataset.barclock=B.clock;d.dataset.barlang=B.lang?'on':'off';d.dataset.barsave=B.save?'on':'off';d.dataset.barhide=B.autohide?'on':'off';
+  d.dataset.sb=R.bars;d.dataset.smooth=R.smooth?'on':'off';d.dataset.fades=R.fades?'on':'off';d.style.setProperty('--tkmaxw',B.maxw+'px');shClock();try{renderTasks()}catch(e){}}
+/* ---------- taskbar ---------- */
+function shName(id){return t('app.'+id)}
+renderTasks=function(){const T=$('#tasks');if(!T)return;const B=shBar();const ov=[...document.querySelectorAll('.overlay.ovmin')];let W=Object.values(WM.wins);if(B.order==='az')W=W.slice().sort((a,b)=>shName(a.id).localeCompare(shName(b.id)));
+  const pins=(B.pins||[]).filter(id=>APPS[id]&&!WM.wins[id]);const ct=id=>`<button class="tkx" data-tclose="${id}" title="${esc(t('wm.close'))} · ${esc(shName(id))}" aria-label="${esc(t('wm.close'))} ${esc(shName(id))}">${icon('close')}</button>`;
+  T.innerHTML=pins.map(id=>`<span class="tkw pin" data-tkid="p:${id}"><button class="task pin" data-open="${id}" data-pin="${id}" title="${esc(shName(id))} · ${esc(t('sh.pinned'))}" aria-label="${esc(shName(id))}">${icon(APPS[id].icon||id)}<span class="tkl">${esc(shName(id))}</span></button></span>`).join('')
+   +ov.map(o=>`<span class="tkw min" data-tkid="o:${o.dataset.ov}"><button class="task min ovtask" data-ovtask="${o.dataset.ov}" title="${esc(o.dataset.title)}" aria-label="${esc(o.dataset.title)}">${icon('manual')}<span class="tkl">${esc(o.dataset.title||'…')}</span></button><button class="tkx" data-ovclose="${o.dataset.ov}" aria-label="${esc(t('wm.close'))}" title="${esc(t('wm.close'))}">${icon('close')}</button></span>`).join('')
+   +W.map(w=>{const on=WM.focus===w.id&&!w.min;return `<span class="tkw${on?' on':''}${w.min?' min':''}${(B.pins||[]).includes(w.id)?' pinned':''}" data-tkid="${w.id}"><button class="task${on?' on':''}${w.min?' min':''}" data-task="${w.id}" title="${esc(shName(w.id))}${w.min?' · '+esc(t('sh.minimized')):''}" aria-label="${esc(shName(w.id))}" aria-pressed="${on}">${icon(APPS[w.id].icon||w.id)}<span class="tkl">${esc(shName(w.id))}</span></button>${ct(w.id)}</span>`}).join('')
+   +`<button class="tkmore" id="tkmore" hidden aria-haspopup="menu" title="${esc(t('sh.all'))}"></button>`;shFit()};
+let _shFitRaf=0;function shFit(){cancelAnimationFrame(_shFitRaf);_shFitRaf=requestAnimationFrame(()=>{const T=$('#tasks');if(!T)return;const B=shBar();const items=[...T.querySelectorAll('.tkw')];const more=$('#tkmore',T);items.forEach(x=>x.hidden=false);if(more)more.hidden=true;if(!items.length){T.dataset.mode='';return}
+  const cs=getComputedStyle(document.documentElement);const iconW=parseFloat(cs.getPropertyValue('--tkicon'))||44;const gap=4;const avail=T.clientWidth;const n=items.length;const per=(avail-gap*(n-1))/n;
+  const mode=B.labels==='always'?'label':B.labels==='never'?'icon':(per>=Math.max(96,iconW*2.2)?'label':'icon');const w=mode==='label'?Math.max(96,Math.min(B.maxw,per)):iconW;T.dataset.mode=mode;T.style.setProperty('--tkw',w+'px');
+  const fit=Math.max(1,Math.floor((avail+gap)/(w+gap)));if(n>fit){const keep=Math.max(1,fit-1);const act=items.findIndex(x=>x.classList.contains('on'));const vis=new Set(items.slice(0,keep).map((x,i)=>i));if(act>=keep){vis.delete(keep-1);vis.add(act)}items.forEach((x,i)=>x.hidden=!vis.has(i));const hid=items.filter(x=>x.hidden).length;if(more&&hid){more.hidden=false;more.textContent='»'+hid;more.setAttribute('aria-label',t('sh.more',{n:hid}))}}})}
+if('ResizeObserver' in window){const ro=new ResizeObserver(()=>shFit());const go=()=>{const T=$('#tasks');T?ro.observe(T):setTimeout(go,300)};go()}
+addEventListener('resize',()=>shFit(),{passive:true});
+/* clicks: close buttons, overflow list, middle click */
+document.addEventListener('click',e=>{const x=e.target.closest&&e.target.closest('[data-tclose],[data-ovclose],#tkmore,[data-sfocus],[data-shclall]');if(!x)return;e.preventDefault();e.stopPropagation();
+  if(x.dataset.tclose){const id=x.dataset.tclose;closeWin(id);renderTasks();if($('#start.on'))renderStart($('#startq')?$('#startq').value:'');const p=$('.shpop');p&&shMoreList(p)}
+  else if(x.dataset.ovclose){const o=document.querySelector(`.overlay[data-ov="${x.dataset.ovclose}"]`);if(o){const b=o.querySelector('.tb .x');b?b.click():o.remove()}setTimeout(renderTasks,30)}
+  else if(x.id==='tkmore')shMore(x);else if(x.dataset.sfocus){const id=x.dataset.sfocus;closeStart();restoreWin(id);focusWin(id)}
+  else if(x.dataset.shclall!==undefined)shCloseAll()},true);
+document.addEventListener('auxclick',e=>{if(e.button!==1||!shBar().midclose)return;const tk=e.target.closest&&e.target.closest('[data-task]');if(tk){e.preventDefault();closeWin(tk.dataset.task);renderTasks()}},true);
+document.addEventListener('mousedown',e=>{if(e.button===1&&e.target.closest&&e.target.closest('[data-task]'))e.preventDefault()},true);
+function shCloseAll(){const n=Object.keys(WM.wins).length;if(!n)return;if(shBar().confirmAll&&n>1&&!confirm(t('sh.closeallq',{n})))return;Object.keys(WM.wins).forEach(closeWin);renderTasks();if($('#start.on'))renderStart();$('.shpop')&&$('.shpop').remove()}
+function shMore(btn){let p=$('.shpop');if(p){p.remove();return}p=document.createElement('div');p.className='shpop';p.setAttribute('role','menu');document.body.appendChild(p);shMoreList(p);
+  const r=btn.getBoundingClientRect();const W=Math.min(320,innerWidth-12);p.style.width=W+'px';p.style.left=Math.max(6,Math.min(innerWidth-W-6,r.right-W))+'px';if(shBar().pos==='top')p.style.top=(r.bottom+6)+'px';else p.style.bottom=(innerHeight-r.top+6)+'px';
+  setTimeout(()=>{const off=e=>{if(!p.contains(e.target)&&e.target!==btn){p.remove();document.removeEventListener('pointerdown',off,true)}};document.addEventListener('pointerdown',off,true)},0);const f=$('button',p);f&&f.focus()}
+function shMoreList(p){const W=Object.values(WM.wins);const ov=[...document.querySelectorAll('.overlay.ovmin')];if(!W.length&&!ov.length){p.remove();return}
+  p.innerHTML=`<div class="ctxh">${esc(t('sh.open'))} · ${W.length+ov.length}</div><div class="shpl">${ov.map(o=>`<span class="sow"><button class="sapp mini" data-ovtask="${o.dataset.ov}"><span class="ic">${icon('manual')}</span><span><b>${esc(o.dataset.title||'…')}</b></span></button><button class="tkx" data-ovclose="${o.dataset.ov}" aria-label="${esc(t('wm.close'))}">${icon('close')}</button></span>`).join('')}${W.map(w=>`<span class="sow${WM.focus===w.id&&!w.min?' on':''}"><button class="sapp mini" data-sfocus="${w.id}"><span class="ic">${icon(APPS[w.id].icon||w.id)}</span><span><b>${esc(shName(w.id))}</b>${w.min?`<small>${esc(t('sh.minimized'))}</small>`:''}</span></button><button class="tkx" data-tclose="${w.id}" aria-label="${esc(t('wm.close'))} ${esc(shName(w.id))}">${icon('close')}</button></span>`).join('')}</div>
+  <div class="row"><button class="btn sm" data-shminall>${icon('min')} ${esc(t('wm.minall'))}</button><button class="btn sm" data-shclall>${icon('close')} ${esc(t('sh.closeall'))}</button></div>`;
+  const mb=$('[data-shminall]',p);mb&&(mb.onclick=()=>{Object.keys(WM.wins).forEach(minWin);p.remove()})}
+/* pin / unpin from the window menu and from pinned buttons */
+function shPin(id,on){const B=shBar();const L=(B.pins||[]).filter(x=>x!==id);if(on)L.push(id);shSave('bar',{pins:L});toast(t(on?'sh.pinnedok':'sh.unpinnedok',{a:shName(id)}))}
+{const _wm=wmMenu;wmMenu=function(id,x,y){_wm(id,x,y);const m=$('#ctx');if(!m)return;const pinned=(shBar().pins||[]).includes(id);const hr=[...m.querySelectorAll('hr')].pop();const b=document.createElement('button');b.setAttribute('role','menuitem');b.innerHTML=`${icon('star')}<span>${esc(t(pinned?'sh.unpin':'sh.pin'))}</span>`;b.onclick=()=>{closeCtx();shPin(id,!pinned)};hr?hr.before(b):m.appendChild(b)}}
+document.addEventListener('contextmenu',e=>{const p=e.target.closest&&e.target.closest('[data-pin]');if(!p)return;e.preventDefault();e.stopPropagation();closeCtx();const id=p.dataset.pin;const m=document.createElement('div');m.id='ctx';m.setAttribute('role','menu');
+  m.innerHTML=`<div class="ctxh">${esc(shName(id))}</div><button role="menuitem" data-a="o">${icon(APPS[id].icon||id)}<span>${esc(t('sh.openit'))}</span></button><button role="menuitem" data-a="u">${icon('star')}<span>${esc(t('sh.unpin'))}</span></button>`;document.body.appendChild(m);const r=m.getBoundingClientRect();m.style.left=Math.max(4,Math.min(innerWidth-r.width-4,e.clientX))+'px';m.style.top=Math.max(4,Math.min(innerHeight-r.height-4,e.clientY-r.height))+'px';
+  m.onclick=ev=>{const b=ev.target.closest('[data-a]');if(!b)return;closeCtx();b.dataset.a==='o'?openApp(id):shPin(id,false)};$('button',m).focus()},true);
+/* auto-hide */
+{let tm=0;const show=on=>{const d=document.documentElement;if(on){d.dataset.barshow='on';clearTimeout(tm)}else{clearTimeout(tm);tm=setTimeout(()=>{if(!$('#start.on')&&!$('.shpop')&&!$('#bar').matches(':hover,:focus-within'))delete d.dataset.barshow},700)}};
+  addEventListener('pointermove',e=>{if(!shBar().autohide)return;const top=shBar().pos==='top';const near=top?e.clientY<8:e.clientY>innerHeight-8;if(near)show(true);else if(document.documentElement.dataset.barshow&&!e.target.closest('#bar,#start,.shpop'))show(false)},{passive:true});
+  addEventListener('pointerdown',e=>{if(!shBar().autohide)return;const top=shBar().pos==='top';if(top?e.clientY<14:e.clientY>innerHeight-14)show(true)},{passive:true});
+  addEventListener('focusin',e=>{if(shBar().autohide&&e.target.closest&&e.target.closest('#bar'))show(true)})}
+/* clock (time / date / UTC / seconds) with a details pop-up */
+function shClock(){let src=$('#clock');let el=$('#clockx');if(!src)return;if(!el){el=document.createElement('button');el.id='clockx';el.type='button';src.after(el);src.hidden=true;el.onclick=e=>{e.stopPropagation();shClockPop(el)}}
+  const B=shBar(),d=new Date(),L=S.settings.lang||'en';const tm=d.toLocaleTimeString(L,{hour:'2-digit',minute:'2-digit',second:B.clock==='seconds'?'2-digit':undefined});
+  el.hidden=B.clock==='off';el.innerHTML=B.clock==='time'||B.clock==='seconds'?`<b>${tm}</b>`:B.clock==='date'?`<b>${tm}</b><span class="muted">${d.toLocaleDateString(L,{day:'2-digit',month:'short'})}</span>`:`<b>${tm}</b><span class="muted">${d.toISOString().slice(0,16).replace('T',' ')} UTC</span>`;el.title=d.toLocaleString(L,{dateStyle:'full',timeStyle:'long'})}
+setInterval(shClock,1000);
+function shClockPop(btn){let p=$('.shpop');if(p){p.remove();return}p=document.createElement('div');p.className='shpop shclk';document.body.appendChild(p);const draw=()=>{if(!p.isConnected)return;const d=new Date(),L=S.settings.lang||'en';const tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';
+    p.innerHTML=`<div class="shbig">${d.toLocaleTimeString(L)}</div><div>${esc(d.toLocaleDateString(L,{dateStyle:'full'}))}</div><table class="t small qlinfo"><tr><th>UTC</th><td class="mono">${d.toISOString().replace('T',' ').slice(0,19)}</td></tr><tr><th>${esc(t('sh.tz'))}</th><td>${esc(tz)} (UTC${-d.getTimezoneOffset()>=0?'+':'−'}${pad(Math.floor(Math.abs(d.getTimezoneOffset())/60))}:${pad(Math.abs(d.getTimezoneOffset())%60)})</td></tr><tr><th>ISO</th><td class="mono small">${d.toISOString()}</td></tr><tr><th>Unix</th><td class="mono">${Math.floor(d/1000)}</td></tr></table><div class="row"><button class="btn sm" data-cp>${esc(t('wx.m.copy'))} UTC</button></div>`;
+    $('[data-cp]',p).onclick=()=>copyText(new Date().toISOString())};draw();const iv=setInterval(()=>{if(!p.isConnected)clearInterval(iv);else draw()},1000);
+  const r=btn.getBoundingClientRect();const W=Math.min(300,innerWidth-12);p.style.width=W+'px';p.style.left=Math.max(6,Math.min(innerWidth-W-6,r.right-W))+'px';if(shBar().pos==='top')p.style.top=(r.bottom+6)+'px';else p.style.bottom=(innerHeight-r.top+6)+'px';
+  setTimeout(()=>{const off=e=>{if(!p.contains(e.target)&&e.target!==btn&&!btn.contains(e.target)){p.remove();document.removeEventListener('pointerdown',off,true)}};document.addEventListener('pointerdown',off,true)},0)}
+/* ---------- start menu ---------- */
+{const _rs=renderStart;renderStart=function(q=''){_rs(q);try{shStart(q||'')}catch(e){console.error(e)}}}
+function shStart(q){const st=$('#start');if(!st)return;const M=shMenu();st.dataset.layout=M.layout;st.dataset.size=st.dataset.exp==='1'?'full':M.size;st.dataset.desc=M.desc;st.dataset.icon=M.icon;st.dataset.gcols=M.groupcols;st.style.setProperty('--scols',M.cols>0?String(M.cols):'');st.classList.toggle('fixcols',M.cols>0);
+  const head=$('.shead',st);if(head&&!$('.shtools',head))head.insertAdjacentHTML('beforeend',`<div class="shtools"><button class="btn sm" data-shx="exp" title="${esc(t(st.dataset.exp==='1'?'sh.shrink':'sh.expand'))}" aria-label="${esc(t(st.dataset.exp==='1'?'sh.shrink':'sh.expand'))}">${st.dataset.exp==='1'?'⤡':'⤢'}</button><button class="btn sm" data-shx="set" title="${esc(t('sh.tab'))}" aria-label="${esc(t('sh.tab'))}">${icon('settings')}</button><button class="btn sm" data-shx="close" title="${esc(t('wm.close'))}" aria-label="${esc(t('wm.close'))}">${icon('close')}</button></div>`);
+  $$('[data-shx]',st).forEach(b=>b.onclick=e=>{e.stopPropagation();const a=b.dataset.shx;if(a==='exp'){st.dataset.exp=st.dataset.exp==='1'?'':'1';renderStart($('#startq')?$('#startq').value:'')}else if(a==='close')closeStart();else{closeStart();const w=openApp('settings');w.tab='shell';renderWin('settings')}});
+  const sq=$('.sqrow',st);const W=Object.values(WM.wins);
+  if(!q&&M.open&&W.length&&sq)sq.insertAdjacentHTML('afterend',`<div class="sgrp sopen"><h5><span>${esc(t('sh.open'))} · ${W.length}</span><button class="lnk" data-shclall>${esc(t('sh.closeall'))}</button></h5><div class="sopenl">${W.map(w=>`<span class="sow${WM.focus===w.id&&!w.min?' on':''}"><button class="sapp mini" data-sfocus="${w.id}" title="${esc(t('appd.'+w.id))}"><span class="ic">${icon(w.id)}</span><span><b>${esc(shName(w.id))}</b>${w.min?`<small>${esc(t('sh.minimized'))}</small>`:''}</span></button><button class="tkx" data-tclose="${w.id}" title="${esc(t('wm.close'))}" aria-label="${esc(t('wm.close'))} ${esc(shName(w.id))}">${icon('close')}</button></span>`).join('')}</div></div>`);
+  const favs=(M.favs||[]).filter(id=>APPS[id]);const anchor=$('.sopen',st)||sq;
+  if(!q&&favs.length&&anchor)anchor.insertAdjacentHTML('afterend',`<div class="sgrp sfavs"><h5><span>★ ${esc(t('sh.favs'))}</span></h5><div class="sfreq">${favs.map(id=>`<button class="sapp mini" data-open="${id}" title="${esc(t('appd.'+id))}"><span class="ic">${icon(id)}</span><span><b>${esc(shName(id))}</b></span></button>`).join('')}</div></div>`);
+  if(!q){const ae=$('.assist,.sug',st);const asg=ae?ae.closest('.sgrp'):null;if(asg&&!M.assist)asg.remove();const fq=$('.sfreq',st);const fg=fq&&!fq.closest('.sfavs')?fq.closest('.sgrp'):null;if(fg&&!M.freq)fg.remove()}
+  const sg=$('.sgroups',st);if(sg&&!q&&M.sort==='az'){const ids=[...new Set(MENU_GROUPS.flatMap(g=>g[1]))].filter(id=>APPS[id]).sort((a,b)=>shName(a).localeCompare(shName(b)));sg.innerHTML=`<div class="sgrp"><h5><span>${esc(t('sh.az'))}</span></h5><div class="sgrid">${ids.map(id=>`<button class="sapp" data-open="${id}" title="${esc(t('appd.'+id))}"><span class="ic">${icon(id)}</span><span><b>${esc(shName(id))}</b><small>${esc(t('appd.'+id))}</small></span></button>`).join('')}</div></div>`}
+  if(sg&&!q&&M.sort!=='az'){const col=new Set(M.collapsed||[]);[...sg.querySelectorAll(':scope>.sgrp')].forEach((g,i)=>{const h=$('h5',g);const key=MENU_GROUPS[i]?MENU_GROUPS[i][0]:'g'+i;if(!h||h.dataset.sh)return;h.dataset.sh=1;const n=g.querySelectorAll('.sapp').length;h.innerHTML=`<button class="shgh" aria-expanded="${!col.has(key)}"><span>${h.innerHTML}</span><span class="muted small">${n}</span><span class="chev">▾</span></button>`;g.classList.toggle('collapsed',col.has(key));
+    $('.shgh',h).onclick=e=>{e.stopPropagation();const c=new Set(shMenu().collapsed||[]);c.has(key)?c.delete(key):c.add(key);S.settings.smenu=Object.assign({},S.settings.smenu||{},{collapsed:[...c]});saveSettings();g.classList.toggle('collapsed',c.has(key));$('.shgh',h).setAttribute('aria-expanded',!c.has(key))}})}
+  const fv=new Set(favs);$$('.sgroups .sapp[data-open],.sgrid .sapp[data-open]',st).forEach(b=>{if(b.parentElement.classList.contains('sappw'))return;const id=b.dataset.open;const wr=document.createElement('span');wr.className='sappw';b.replaceWith(wr);wr.appendChild(b);const s=document.createElement('button');s.className='sfav'+(fv.has(id)?' on':'');s.type='button';s.textContent=fv.has(id)?'★':'☆';s.title=t(fv.has(id)?'sh.unfav':'sh.fav');s.setAttribute('aria-label',s.title+' · '+shName(id));
+    s.onclick=e=>{e.stopPropagation();const L=(shMenu().favs||[]).filter(x=>x!==id);if(!fv.has(id))L.push(id);S.settings.smenu=Object.assign({},S.settings.smenu||{},{favs:L});saveSettings();renderStart($('#startq')?$('#startq').value:'')};wr.appendChild(s)});
+  if(!st.dataset.shk){st.dataset.shk=1;st.addEventListener('keydown',shStartKeys)}}
+function shStartKeys(e){if(!['ArrowDown','ArrowUp','ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;const a=document.activeElement;if(a&&a.id==='startq'&&['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;
+  const L=[...$('#start').querySelectorAll('.sapp')].filter(b=>b.offsetParent&&!b.closest('.collapsed .sgrid'));if(!L.length)return;e.preventDefault();if(a&&a.id==='startq'){L[0].focus();return}const i=L.indexOf(a);if(i<0){L[0].focus();return}
+  if(e.key==='Home'){L[0].focus();return}if(e.key==='End'){L[L.length-1].focus();return}const r=a.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let best=null,bd=1e9;
+  for(const b of L){if(b===a)continue;const q=b.getBoundingClientRect(),x=q.left+q.width/2,y=q.top+q.height/2,dx=x-cx,dy=y-cy;const ok=e.key==='ArrowDown'?dy>4:e.key==='ArrowUp'?dy<-4:e.key==='ArrowRight'?dx>4&&Math.abs(dy)<r.height:dx<-4&&Math.abs(dy)<r.height;if(!ok)continue;const dd=e.key.match(/Down|Up/)?Math.abs(dy)*1+Math.abs(dx)*2:Math.abs(dx)+Math.abs(dy)*3;if(dd<bd){bd=dd;best=b}}
+  if(!best&&e.key==='ArrowRight')best=L[i+1];if(!best&&e.key==='ArrowLeft')best=L[i-1];if(!best&&e.key==='ArrowUp'){$('#startq')&&$('#startq').focus();return}best&&(best.focus({preventScroll:true}),best.scrollIntoView({block:'nearest',behavior:shScr().smooth?'smooth':'auto'}))}
+/* ---------- scrolling helpers (horizontal rows, edge fades, drag, back-to-top) ---------- */
+const SH_HROW='.tabs,.chips,.wlmode,.wxstrip,.qlstrip,.sfreq,.spsc,.mannav,.seg,.wxchips,.albar';
+function shHScroll(el){return el.scrollWidth>el.clientWidth+2&&getComputedStyle(el).overflowX!=='visible'&&getComputedStyle(el).overflowX!=='hidden'}
+function shFade(el){if(!el||!el.isConnected)return;const can=el.scrollWidth>el.clientWidth+2;el.classList.toggle('hs-l',can&&el.scrollLeft>2);el.classList.toggle('hs-r',can&&el.scrollLeft+el.clientWidth<el.scrollWidth-2)}
+document.addEventListener('wheel',e=>{if(!shScr().hwheel||e.ctrlKey||Math.abs(e.deltaX)>=Math.abs(e.deltaY))return;const el=e.target.closest&&e.target.closest(SH_HROW);if(!el||!shHScroll(el))return;if(el.scrollHeight>el.clientHeight+2)return;const max=el.scrollWidth-el.clientWidth;if((e.deltaY<0&&el.scrollLeft<=0)||(e.deltaY>0&&el.scrollLeft>=max-1))return;e.preventDefault();el.scrollLeft+=e.deltaY*(e.deltaMode===1?32:1);shFade(el)},{passive:false});
+document.addEventListener('scroll',e=>{const el=e.target;if(el&&el.matches&&el.matches(SH_HROW))shFade(el);if(el&&el.classList&&el.classList.contains('wc'))shTopBtn(el)},{capture:true,passive:true});
+{let pend=false;const pass=()=>{pend=false;document.querySelectorAll(SH_HROW).forEach(el=>{shFade(el);if(!el.dataset.shon){el.dataset.shon=1;const on=el.querySelector(':scope>.on,:scope>[aria-selected=true]');if(on&&el.scrollWidth>el.clientWidth+2){const l=on.offsetLeft-el.offsetLeft,r=l+on.offsetWidth;if(l<el.scrollLeft||r>el.scrollLeft+el.clientWidth)el.scrollLeft=Math.max(0,l-24)}}})};
+  new MutationObserver(()=>{if(!pend){pend=true;setTimeout(pass,120)}}).observe(document.body,{childList:true,subtree:true});addEventListener('resize',()=>{if(!pend){pend=true;setTimeout(pass,150)}},{passive:true})}
+/* mouse drag-to-scroll on horizontal rows (a click still works when the pointer did not move) */
+{let D=null;document.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'||e.button!==0||!shScr().drag)return;const el=e.target.closest&&e.target.closest(SH_HROW);if(!el||!shHScroll(el)||e.target.closest('input,select,textarea'))return;D={el,x:e.clientX,s:el.scrollLeft,moved:false}},true);
+  document.addEventListener('pointermove',e=>{if(!D)return;const dx=e.clientX-D.x;if(!D.moved&&Math.abs(dx)>6){D.moved=true;D.el.classList.add('hs-drag')}if(D.moved){D.el.scrollLeft=D.s-dx;shFade(D.el)}},true);
+  document.addEventListener('pointerup',()=>{if(D&&D.moved){const el=D.el;el.classList.remove('hs-drag');const stop=ev=>{ev.stopPropagation();ev.preventDefault()};el.addEventListener('click',stop,{capture:true,once:true});setTimeout(()=>el.removeEventListener('click',stop,{capture:true}),50)}D=null},true)}
+/* back-to-top button inside long windows */
+function shTopBtn(wc){if(!shScr().top)return;const win=wc.closest('.win');if(!win)return;let b=win.querySelector(':scope>.shtop');const show=wc.scrollTop>Math.max(400,wc.clientHeight*1.2);if(!b&&show){b=document.createElement('button');b.className='shtop';b.type='button';b.title=t('sh.top');b.setAttribute('aria-label',t('sh.top'));b.textContent='↑';b.onclick=()=>{const c=win.querySelector('.wc');c&&c.scrollTo({top:0,behavior:shScr().smooth?'smooth':'auto'})};win.appendChild(b)}if(b)b.classList.toggle('on',show)}
+/* ---------- Settings → Taskbar & menu ---------- */
+{const _r=APPS.settings.render;APPS.settings.render=function(c,w){if(w.tab!=='shell'){_r.call(this,c,w);const tb=$('.tabs',c);if(tb&&!tb.querySelector('[data-st=shell]')){const L=tb.querySelector('[data-st=look]');(L||tb.firstElementChild).insertAdjacentHTML('afterend',`<button data-st="shell">${esc(t('sh.tab'))}</button>`);tb.querySelector('[data-st=shell]').onclick=()=>{w.tab='shell';renderWin('settings')}}return}
+  this.langs(c,w);const tabs=$('.tabs',c);$$('button',tabs).forEach(b=>b.classList.toggle('on',b.dataset.st==='shell'));[...c.children].forEach(x=>{if(x!==tabs)x.remove()});const B=shBar(),M=shMenu(),R=shScr();
+  const sel=(g,k,l,opts,cur)=>`<label class="row pvrow"><span class="grow"><b>${esc(t(l))}</b></span><select class="in" data-sg="${g}" data-sk="${k}">${opts.map(([v,lb])=>`<option value="${v}"${String(cur)===String(v)?' selected':''}>${esc(t(lb))}</option>`).join('')}</select></label>`;
+  const tg=(g,k,l,cur,h)=>`<label class="row pvrow"><input type="checkbox" data-sg="${g}" data-sk="${k}"${cur?' checked':''}><span class="grow"><b>${esc(t(l))}</b>${h?`<br><span class="small muted">${esc(t(h))}</span>`:''}</span></label>`;
+  const all=[...new Set(MENU_GROUPS.flatMap(g=>g[1]))].filter(id=>APPS[id]);
+  const div=document.createElement('div');div.className='pvset';div.innerHTML=`<h4 class="h">${esc(t('sh.s.bar'))}</h4>
+   ${sel('bar','pos','sh.s.pos',[['bottom','sh.o.bottom'],['top','sh.o.top']],B.pos)}${sel('bar','size','sh.s.size',[['auto','sh.o.auto'],['s','pv.s.sm'],['m','pv.s.md'],['l','pv.s.lg'],['xl','sh.o.xl']],B.size)}
+   ${sel('bar','labels','sh.s.labels',[['auto','sh.o.autofit'],['always','sh.o.always'],['never','sh.o.icons']],B.labels)}${sel('bar','maxw','sh.s.maxw',[[140,'pv.s.sm'],[200,'pv.s.md'],[260,'pv.s.lg'],[340,'sh.o.xl']],B.maxw)}
+   ${sel('bar','close','sh.s.close',[['hover','sh.o.hover'],['always','sh.o.always'],['never','pv.s.bn']],B.close)}${sel('bar','align','sh.s.align',[['left','sh.o.left'],['center','sh.o.center']],B.align)}${sel('bar','order','sh.s.order',[['open','sh.o.opened'],['az','sh.az']],B.order)}
+   ${sel('bar','search','sh.s.search',[['auto','sh.o.auto'],['full','sh.o.full'],['icon','sh.o.icon'],['off','sh.o.hide']],B.search)}${sel('bar','clock','sh.s.clock',[['full','sh.o.clockfull'],['date','sh.o.clockdate'],['time','sh.o.clocktime'],['seconds','sh.o.clocksec'],['off','sh.o.hide']],B.clock)}
+   ${tg('bar','lang','sh.s.lang',B.lang)}${tg('bar','save','sh.s.save',B.save)}${tg('bar','autohide','sh.s.autohide',B.autohide,'sh.s.autohideh')}${tg('bar','midclose','sh.s.mid',B.midclose)}${tg('bar','confirmAll','sh.s.confirm',B.confirmAll)}
+   <div class="pvrow"><b>${esc(t('sh.s.pins'))}</b><p class="small muted">${esc(t('sh.s.pinsh'))}</p><div class="albs">${all.map(id=>`<button class="alb click${(B.pins||[]).includes(id)?' gold':''}" data-pinset="${id}" aria-pressed="${(B.pins||[]).includes(id)}">${(B.pins||[]).includes(id)?'📌 ':''}${esc(shName(id))}</button>`).join('')}</div></div>
+   <h4 class="h">${esc(t('sh.s.menu'))}</h4>
+   ${sel('smenu','size','sh.s.msize',[['auto','sh.o.auto'],['s','pv.s.sm'],['m','pv.s.md'],['l','pv.s.lg'],['full','sh.o.fulls']],M.size)}${sel('smenu','layout','sh.s.layout',[['auto','sh.o.auto'],['list','sh.o.list'],['grid','sh.o.grid'],['compact','sh.o.compact']],M.layout)}
+   ${sel('smenu','cols','sh.s.cols',[[0,'sh.o.auto'],[1,'1'],[2,'2'],[3,'3'],[4,'4'],[5,'5'],[6,'6']],M.cols)}${sel('smenu','groupcols','sh.s.gcols',[['auto','sh.o.auto'],['1','1'],['2','2'],['3','3']],M.groupcols)}
+   ${sel('smenu','desc','sh.s.desc',[['auto','sh.o.auto'],['on','sh.o.always'],['off','pv.s.bn']],M.desc)}${sel('smenu','icon','sh.s.icon',[['s','pv.s.sm'],['m','pv.s.md'],['l','pv.s.lg']],M.icon)}${sel('smenu','sort','sh.s.sort',[['group','sh.o.groups'],['az','sh.az']],M.sort)}
+   ${tg('smenu','open','sh.s.mopen',M.open)}${tg('smenu','assist','sh.s.massist',M.assist)}${tg('smenu','freq','sh.s.mfreq',M.freq)}
+   <div class="row wrap"><button class="btn sm" id="shclrfav">${esc(t('sh.s.clrfav'))} (${(M.favs||[]).length})</button><button class="btn sm" id="shexpand">${esc(t('sh.s.expandall'))}</button></div>
+   <h4 class="h">${esc(t('sh.s.scroll'))}</h4>${sel('scroll','bars','sh.s.bars',[['thin','sh.o.thin'],['normal','pv.s.md'],['wide','sh.o.wide']],R.bars)}${tg('scroll','smooth','sh.s.smooth',R.smooth)}${tg('scroll','hwheel','sh.s.hwheel',R.hwheel,'sh.s.hwheelh')}${tg('scroll','drag','sh.s.drag',R.drag)}${tg('scroll','fades','sh.s.fades',R.fades)}${tg('scroll','top','sh.s.top',R.top)}
+   <div class="row wrap"><button class="btn sm" id="shpreview">${esc(t('sh.s.try'))}</button><button class="btn sm" id="shreset">${esc(t('sh.s.reset'))}</button></div>`;
+  c.appendChild(div);
+  $$('[data-sg]',div).forEach(x=>x.onchange=()=>{let v=x.type==='checkbox'?x.checked:x.value;if(['maxw','cols'].includes(x.dataset.sk))v=+v;shSave(x.dataset.sg,{[x.dataset.sk]:v});renderStart();renderWin('settings')});
+  $$('[data-pinset]',div).forEach(b=>b.onclick=()=>{const id=b.dataset.pinset;shPin(id,!(shBar().pins||[]).includes(id));renderWin('settings')});
+  $('#shclrfav',div).onclick=()=>{shSave('smenu',{favs:[]});renderWin('settings')};$('#shexpand',div).onclick=()=>{shSave('smenu',{collapsed:[]});toast(t('ui.done'))};
+  $('#shpreview',div).onclick=e=>{e.stopPropagation();const s=$('#start');if(!s.classList.contains('on'))toggleStart()};
+  $('#shreset',div).onclick=()=>{if(!confirm(t('pv.s.rstq')))return;S.settings.bar={};S.settings.smenu={};S.settings.scroll={};saveSettings();shApply();renderStart();renderWin('settings')}}}
+/* settings import / restore defaults from v2.2 also re-apply the shell */
+{const _p=pvSettingsApplied;pvSettingsApplied=function(){_p();shApply()}}
+/* first application */
+shApply();setTimeout(shApply,0);
 
 /* ══════════ module: tm ══════════ */
 /* ================= TIME MACHINE — automatic snapshots, backup file and full backups in one place =================
